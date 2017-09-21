@@ -25,7 +25,7 @@ $ gem install acts_as_pdf
 ```ruby
 class Bill < ApplicationRecord
 
-  acts_as_pdf :field, {method: :generate_bill, font_size: '10', font_name: 'Arial'}
+  acts_as_pdf :field, {method: :generate_bill, font_size: '10', font_name: 'Arial', line_height: '180%'}
 
   def generate_bill user, company, obj # has many arguments or no one 
     {
@@ -58,9 +58,14 @@ end
 **views/bills/_form.html.haml**
 ```ruby
 = simple_form_for resource do |f|
-    = f.text :field # with the markdown gem you want 
-    = f.submit 'preview', name: 'preview'
-    = f.submit class: 'btn btn-custom inline'
+    = f.text :field # with the markdown gem you want (be aware of whitespaces)
+    = f.submit 'preview', name: 'preview',  action: 'preview', formtarget: "_blank", id: "first"
+    = f.submit class: 'btn btn-custom inline', id: "second"
+
+:javascript # in other file
+  $('#first').removeAttr('data-disable-with')
+  $('#second').removeAttr('data-disable-with')
+
 ```
 
 **routes.rb**
@@ -89,9 +94,6 @@ end
 ```ruby
 @pdf
 ```
-
-## Contributing
-Contribution directions go here.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
