@@ -8,10 +8,10 @@ module PreviewPdfAddOn
       
         name_view = opts[:view] || 'preview.pdf'
         @pdf = resource.generate_pdf params
+        raise "#{params.inspect}"
         if params[:preview]
           render name_view
         else
-          raise "#{params.inspect}"
           route = params[:commit].split(' ').first.downcase.to_sym
           send(route) if [:create, :update].include? route
         end
