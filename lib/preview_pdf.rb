@@ -8,7 +8,6 @@ module PreviewPdfAddOn
       
         name_view = opts[:view] || 'preview.pdf'
         @pdf = resource.generate_pdf params
-        raise "#{params.inspect}"
         if params[:preview]
           render name_view
         else
@@ -16,6 +15,16 @@ module PreviewPdfAddOn
           send(route) if [:create, :update].include? route
         end
       end
+
+      define_method :create do
+      
+        if params[:preview]
+          send('preview')
+        else
+          super
+        end
+      end
+
     end
   end
 end
