@@ -6,11 +6,13 @@ module PreviewPdfAddOn
 
       define_method :preview do
       
-        name_method = opts[:method] || resource.name_method
         name_view = opts[:view] || 'preview.pdf'
         @pdf = resource.generate_pdf params
-        render name_view if params[:preview]
-
+        if params[:preview]
+          render name_view
+        else
+          render params[:commit].split(' ').first.downcase.to_sym
+        end
       end
     end
   end
