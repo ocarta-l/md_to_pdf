@@ -1,5 +1,3 @@
-require "cancan"
-
 module PreviewPdfAddOn
   extend ActiveSupport::Concern
 

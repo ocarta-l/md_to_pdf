@@ -1,3 +1,5 @@
+require 'preview_pdf'
+
 module ActsAsPdf
   extend ActiveSupport::Concern
 
