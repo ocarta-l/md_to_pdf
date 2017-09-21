@@ -8,7 +8,6 @@ module PreviewPdfAddOn
       
         name_method = opts[:method] || resource.name_method
         name_view = opts[:view] || 'preview.pdf'
-        raise "#{resource.inspect} | #{name_method} | #{params.inspect}"
         @pdf = resource.send(name_method, params)
         render name_view if params[:preview]
 
