@@ -8,7 +8,7 @@ module PreviewPdfAddOn
       
         name_method = opts[:method] || resource.name_method
         name_view = opts[:view] || 'preview.pdf'
-        @pdf = resource.send(name_method, params)
+        @pdf = resource.generate_pdf params
         render name_view if params[:preview]
 
       end
