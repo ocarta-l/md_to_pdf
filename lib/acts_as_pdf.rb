@@ -28,7 +28,7 @@ module ActsAsPdf
   end
 
   def name_method
-    ActsAsPdf.pdf_options[self.to_s.downcase][:opts][:method] rescue nil
+    ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts][:method] rescue nil
   end
 
   def preview params
