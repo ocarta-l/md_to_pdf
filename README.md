@@ -19,13 +19,6 @@ Or install it yourself as:
 $ gem install acts_as_pdf
 ```
 
-You may need:
-```ruby
-gem 'html-pipeline'
-gem 'wicked_pdf'
-gem 'prawn_rails'
-```
-
 ## Usage
 
 **model.rb**
