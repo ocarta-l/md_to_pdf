@@ -25,6 +25,10 @@ module ActsAsPdf
       result[:output].to_s
   end
 
+  def name_method
+    ActsAsPdf.pdf_options[self.to_s.downcase][:opts][:method] rescue nil
+  end
+
   def preview params
     return self unless params[:preview]
 
