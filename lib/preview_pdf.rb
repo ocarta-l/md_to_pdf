@@ -21,7 +21,7 @@ module PreviewPdfAddOn
         if params[:preview]
           send('preview')
         else
-          super
+          send('create')
         end
       end
 
