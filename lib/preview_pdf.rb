@@ -11,7 +11,7 @@ module PreviewPdfAddOn
         if params[:preview]
           render name_view
         else
-          render params[:commit].split(' ').first.downcase.to_sym
+          send(params[:commit].split(' ').first.downcase)
         end
       end
     end
