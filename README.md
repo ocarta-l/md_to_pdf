@@ -1,6 +1,6 @@
 # ActsAsPdf
 
-Quick way to convert markdown to pdf.
+Quick way to convert markdown to a template pdf. 
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -21,47 +21,71 @@ $ gem install acts_as_pdf
 
 ## Usage
 
-**model.rb**
+**bill.rb**
 ```ruby
-class Model < ApplicationRecord
+class Bill < ApplicationRecord
 
-  validates_presence_of :field
+  acts_as_pdf :field, {method: :generate_bill, font_size: '10', font_name: 'Arial'}
 
-  acts_as_pdf :field, {method: :generate_hash, font_size: '10', font_name: 'name'}
-
-  def generate_hash arg1, arg2 # has many arguments or no one 
+  def generate_bill user, company, obj # has many arguments or no one 
     {
-      "//COMPANY_NAME//": arg1.company_name,
-      "//COMPANY_FULL_ADDRESS//": arg1.company_full_address,
-      "//COMPANY_USER_POST//": arg1.company_user_post,
-      "//SALARY//": arg2.salary,
-      "//CURRENCY//": arg2.currency
+      "//COMPANY_NAME//": company.company_name,
+      "//COMPANY_FULL_ADDRESS//": company.company_full_address,
+      "//COMPANY_USER_POST//": company.company_user_post,
+      "//USER_FIRST_NAME//": user.first_name,
+      "//USER_LAST_NAME//": user.last_name,
+      "//OBJECT_PRICE//": obj.salary,
+      "//OBJECT_CURRENCY//": obj.currency
     }
   end
 
 end
 ```
 
-**models_controller.rb**
+**bills_controller.rb**
 ```ruby
-class ModelsController < ApplicationController
-
-  def update
-    @pdf = @model.generate_pdf params, [args] # params[:model][:field]  ;  args = ([arg1, arg2] || nil)
-    render 'preview.pdf' and return if params[:preview]
-    super
-  end
-
-  def create
-    @pdf = @model.generate_pdf params, [args] # params[:model][:field]  ;  args = ([arg1, arg2] || nil)
-    render 'preview.pdf' and return if params[:preview]
-    super
-  end
-
+class BillsController < ApplicationController
+  preview_pdf
+  # preview_pdf {view: 'preview.pdf'}
 end
 ```
 
-**views/preview.pdf.prawn**
+**views/bills/preview.pdf.prawn**
+```ruby
+@pdf
+```
+
+**views/bills/_form.html.haml**
+```ruby
+= simple_form_for resource do |f|
+    = f.text :field # with the markdown gem you want 
+    = f.submit 'preview', name: 'preview'
+    = f.submit class: 'btn btn-custom inline'
+```
+
+**routes.rb**
+```ruby
+    resources :bills do
+      post :create, on: :member, action: :preview
+      patch :update, on: :member, action: :preview
+    end
+```
+
+Now you can use it at runtime:
+
+**users_controller.rb**
+```ruby
+class BillsController < ApplicationController
+
+  def after_buying_something
+    bill = Bill.find(param[:bill_id])
+    product = Product.find(param[:product_id])
+    @pdf = bill.generate_bill(@user, product.company, product)
+  end
+end
+```
+
+**views/bills/after_buying_something.pdf.prawn**
 ```ruby
 @pdf
 ```
