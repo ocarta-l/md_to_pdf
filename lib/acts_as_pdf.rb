@@ -44,7 +44,7 @@ module ActsAsPdf
 
   def generate_pdf params, args = []
     model = self.preview params
-    WickedPdf.new.pdf_from_string(model.md_pdf(args))
+    WickedPdf.new.pdf_from_string(model.md_pdf(args), margin: { top: 0, bottom: 0 })
   end
 
   module ClassMethods
