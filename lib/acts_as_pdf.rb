@@ -16,7 +16,7 @@ module ActsAsPdf
     line_height = opts[:line_height] || '180%'
 
     hash.each { |k, v| output.gsub!(k.to_s, v.to_s) }
-    "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'> <style type = 'text/css'> body { font-family: #{font_name}; font-size: #{font_size}; line-height: #{line_height};  }</style>" + output
+    "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'> <style type = 'text/css'> body { font-family: #{font_name}; font-size: #{font_size}; line-height: #{line_height};  }</style> " + output
   end
 
   def md_to_pdf
