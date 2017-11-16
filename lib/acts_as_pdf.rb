@@ -24,7 +24,7 @@ module ActsAsPdf
         ::HTML::Pipeline::MarkdownFilter
       ]
       result = pipeline.call self.send(ActsAsPdf.pdf_options[self.class.to_s.downcase][:field]).gsub(/[\n|^ ][ |\t]+/){ |m| m.gsub(/ |\t/, '&nbsp;') }.gsub("\n", "<br>")
-      result[:output].to_s.gsub(/\"/, "'")
+      result[:output].to_s# .gsub(/\"/, "'")
   end
 
   def name_method
@@ -34,7 +34,7 @@ module ActsAsPdf
   def preview params
     return self unless params[:preview]
 
-    model_name = self.class.to_s.downcase.to_sym
+    model_name = self.class.to_s.underscore.to_sym
     field_name = ActsAsPdf.pdf_options[self.class.to_s.downcase][:field]
 
     model = self.class.new
