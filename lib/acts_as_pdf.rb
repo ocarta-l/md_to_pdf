@@ -34,7 +34,7 @@ module ActsAsPdf
   def preview params
     return self unless params[:preview]
 
-    model_name = self.class.to_s.downcase.to_sym
+    model_name = self.class.to_s.underscore.to_sym
     field_name = ActsAsPdf.pdf_options[self.class.to_s.downcase][:field]
 
     model = self.class.new
