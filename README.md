@@ -29,19 +29,13 @@ class Bill < ApplicationRecord
 
   def generate_bill user, company, obj # has many arguments or no one 
     {
-      variables: {
-        "//COMPANY_NAME//": company.company_name,
-        "//COMPANY_FULL_ADDRESS//": company.company_full_address,
-        "//COMPANY_USER_POST//": company.company_user_post,
-        "//USER_FIRST_NAME//": user.first_name,
-        "//USER_LAST_NAME//": user.last_name,
-        "//OBJECT_PRICE//": obj.salary,
-        "//OBJECT_CURRENCY//": obj.currency
-      },
-      options: { # optional, only if you need footer or header
-        header: { font_size: 16, center: 'header' }
-        footer: { font_size: 10, center: 'footer'}
-      }
+      "//COMPANY_NAME//": company.company_name,
+      "//COMPANY_FULL_ADDRESS//": company.company_full_address,
+      "//COMPANY_USER_POST//": company.company_user_post,
+      "//USER_FIRST_NAME//": user.first_name,
+      "//USER_LAST_NAME//": user.last_name,
+      "//OBJECT_PRICE//": obj.salary,
+      "//OBJECT_CURRENCY//": obj.currency
     }
   end
 
@@ -86,12 +80,12 @@ Now you can use it at runtime:
 
 **users_controller.rb**
 ```ruby
-class UsersController < ApplicationController
+class BillsController < ApplicationController
 
   def after_buying_something
     bill = Bill.find(param[:bill_id])
     product = Product.find(param[:product_id])
-    @pdf = bill.generate_pdf(params, [@user, product.company, product])
+    @pdf = bill.generate_bill(@user, product.company, product)
   end
 end
 ```
