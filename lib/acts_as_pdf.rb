@@ -6,8 +6,12 @@ module ActsAsPdf
   @@pdf_options = {}
   cattr_accessor :pdf_options
 
+  def get_hash args
+    @hash ||= (self.send(ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts][:method], *args) rescue {})
+  end
+
   def md_pdf args = []
-    hash = self.send(ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts][:method], *args) rescue {}
+    get_hash args
     output = md_to_pdf
 
     opts = ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts]
@@ -15,7 +19,7 @@ module ActsAsPdf
     font_size = opts[:font_size] || '10'
     line_height = opts[:line_height] || '180%'
 
-    hash.each { |k, v| output.gsub!(k.to_s, v.to_s) }
+    @hash[:variables].each { |k, v| output.gsub!(k.to_s, v.to_s) } if @hash.keys.include? :variables
     "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'> <style type = 'text/css'> body { font-family: #{font_name}; font-size: #{font_size}; line-height: #{line_height};  }</style> " + output
   end
 
@@ -43,8 +47,11 @@ module ActsAsPdf
   end
 
   def generate_pdf params, args = []
+    get_hash args
     model = self.preview params
-    WickedPdf.new.pdf_from_string(model.md_pdf(args), ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts])
+    opts = ActsAsPdf.pdf_options[self.class.to_s.downcase][:opts]
+    @hash[:options] = {} unless @hash[:options].present?
+    WickedPdf.new.pdf_from_string(model.md_pdf(args), opts.merge(@hash[:options]))
   end
 
   module ClassMethods
